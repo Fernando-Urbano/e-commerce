@@ -4,9 +4,9 @@
     <h1>{{ auction.name }}</h1>
     <h5>{{ auction.description }}</h5>
     {% if auction_owner %}
-        <h6>Auction owner: {{ auction.user }}</h6>
-    {% else %}
         <h6>You are the owner of this auction</h6>
+    {% else %}
+        <h6>Auction owner: {{ auction.user }}</h6>
     {% endif %}
     <div>
         {% if highest_bid_user %}
@@ -63,10 +63,18 @@
                     <div>{{ comment.text }}</div>
                 </div>
             {% endfor %}
-            <h6>Add comment</h6>
         {% else %}
             <h6>No comments yet. Be the first to comment!</h6>
         {% endif %}
     </div>
-    
+
+    <div>
+        <form action="post">
+            <textarea name="new_comment" id="new_comment" cols="100" rows="2" placeholder="Write your comment here"></textarea>
+            <div>
+                <input type="submit" value="Add comment">
+            </div>
+        </form>
+    </div>
+
 {% endblock %}
