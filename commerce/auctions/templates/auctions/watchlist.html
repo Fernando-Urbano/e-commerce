@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h1>Watchlist</h1>
+
+    {% if watchlist.auction %}
+        {% for auction in watchlist.auction %}
+            <a href="{% url 'auction_details' auction_id=auction.id %}">
+                {{ auction.name }} - {{ auction.current_bid }}
+            </a>
+        {% endfor %}
+    {% else %}
+        <h6>You are not watching any auction.</h6>
+    {% endif %}
+
+{% endblock %}

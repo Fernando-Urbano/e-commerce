@@ -3,8 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Auction, Bid, Comment, Category
 
 
 def index(request):
@@ -35,6 +36,38 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+
+def auction_details(request, auction_id):
+    auction = Auction.objects.get(pk=auction_id)
+    bids = auction.bids.all()
+    highest_bid = auction.bids.order_by('-value').first()
+    highest_bid_value = highest_bid.value if highest_bid else None
+    highest_bid_user = highest_bid.user if highest_bid else None
+    comments = auction.comments.all()
+    if request.user.id:
+        is_authenticated = True
+        auction_owner = True if request.user.id == auction.user.id else False
+    else:
+        is_authenticated = False
+        auction_owner = False
+    return render(request, 'auctions/auction_details.html', {
+        'auction': auction,
+        'highest_bid_value': highest_bid_value,
+        'highest_bid_user': highest_bid_user,
+        'image_url': auction.image_url,
+        'bids': bids,
+        'comments': comments,
+        'is_authenticated': is_authenticated,
+        'auction_owner': auction_owner
+    })
+
+
+@login_required(redirect_field_name='login')
+def watchlist(request):
+    user = User.objects.get(pk=request.user.pk)
+    return render(request, "auctions/watchlist.html", {
+        'watchlist': user.watchlist
+    })
 
 def register(request):
     if request.method == "POST":
