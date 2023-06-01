@@ -4,12 +4,16 @@
 
     <h1>Watchlist</h1>
 
-    {% if watchlist.auction %}
-        {% for auction in watchlist.auction %}
-            <a href="{% url 'auction_details' auction_id=auction.id %}">
-                {{ auction.name }} - {{ auction.current_bid }}
-            </a>
-        {% endfor %}
+    {% if watchlist %}
+        <ul>
+            {% for auction in watchlist %}
+                <li>
+                    <a href="{% url 'auction_details' auction_id=auction.id %}">
+                        {{ auction.name }} - Current bid: {{ auction.current_bid }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
     {% else %}
         <h6>You are not watching any auction.</h6>
     {% endif %}

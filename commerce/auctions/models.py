@@ -4,7 +4,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    watchlist = models.ManyToManyField('Auction', blank=True, related_name='watched_by')
 
 
 class Category(models.Model):
@@ -15,13 +15,14 @@ class Category(models.Model):
 
 
 class Auction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='auctions')
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
     minimum_bid = models.FloatField()
     date_created = models.DateTimeField(auto_now_add=True)
     image_url = models.URLField(null=True, blank=True, max_length=500)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    closed = models.BooleanField(default=False)
 
     def __str__(self):
         category = self.category if self.category is not None else "No Category"
@@ -65,13 +66,3 @@ class Bid(models.Model):
             raise ValidationError("Bid value must be bigger than 0.")
         elif self.value < self.auction.minimum_bid:
             raise ValidationError(f"Bid value must be bigger than {self.auction} action minimum bid ({self.auction.minimum_bid:.2f}).")
-
-
-class WatchList(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='watchlist')
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username} {self.user.id} watching {self.auction.name} ({self.auction.id})"
-
