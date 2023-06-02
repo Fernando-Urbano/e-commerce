@@ -1,7 +1,24 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h1>Active Listings</h1>
 
-    TODO
+    {% for auction in auctions %}
+    <div>
+        <a class="nav-link" href="{% url 'auction_details' auction_id=auction.id %}">
+            <h3>{{ auction.name }}</h3>
+        </a>
+        <h6>Auction owner: {{ auction.user.username }}</h6>
+        {% if auction.current_bid > 0 %}
+            Current bid: US$ {{ auction.current_bid }}
+        {% else %}
+            No bids placed.
+        {% endif %}
+        {% if auction.image_url %}
+        <div>
+            <img src="{{ auction.image_url }}" alt="{{ auction.name }}" height="200">
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
 {% endblock %}

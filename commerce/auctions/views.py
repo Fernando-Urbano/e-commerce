@@ -9,7 +9,24 @@ from .models import User, Auction, Bid, Comment, Category
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    auctions = Auction.objects.filter(closed=False)
+    return render(request, "auctions/index.html", {
+        'auctions': auctions
+    })
+
+
+def categories(request):
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        'categories': categories
+    })
+
+
+def category_auctions(request, category_id):
+    category = Category.objects.get(pk=int(category_id))
+    return render(request, "auctions/category_auctions.html", {
+        'category': category
+    })
 
 
 def login_view(request):
@@ -56,7 +73,8 @@ def auction_details(request, auction_id):
         'bids': bids,
         'comments': comments,
         'is_authenticated': is_authenticated,
-        'auction_owner': auction_owner
+        'auction_owner': auction_owner,
+        'auction_closed': auction.closed
     })
 
 

@@ -13,6 +13,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def number_auctions(self):
+        auctions = self.auctions.all()
+        return len(auction)
+
 
 class Auction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='auctions')
@@ -21,7 +26,7 @@ class Auction(models.Model):
     minimum_bid = models.FloatField()
     date_created = models.DateTimeField(auto_now_add=True)
     image_url = models.URLField(null=True, blank=True, max_length=500)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='auctions')
     closed = models.BooleanField(default=False)
 
     def __str__(self):

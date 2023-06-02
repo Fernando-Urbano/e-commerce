@@ -15,18 +15,28 @@
             No bids yet placed. Initial Bid: US$ {{ auction.minimum_bid }}.
         {% endif %}
         {% if is_authenticated %}
-            {% if auction_owner %}
-                {% if bids %}
-                    <h6>Accept current offer {{ highest_bid_value }}</h6>
-                {% endif %}
-                <h6>Withdraw auction</h6>
+            {% if auction_closed %}
+                <h6>Auction closed.</h6>
             {% else %}
-                <h6>Place a bid!</h6>
+                {% if auction_owner %}
+                    {% if bids %}
+                        <h6>Accept current offer {{ highest_bid_value }}</h6>
+                    {% endif %}
+                    <h6>Withdraw auction</h6>
+                {% else %}
+                    <h6>Place a bid!</h6>
+                {% endif %}
             {% endif %}
         {% else %}
             <h6>Login to interact with Auction!</h6>
         {% endif %}
     </div>
+
+    {% if auction.image_url %}
+        <div>
+            <img src="{{ auction.image_url }}" alt="{{ auction.name }}" height="200">
+        </div>
+    {% endif %}
 
 
     <div>
