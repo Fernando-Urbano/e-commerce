@@ -16,7 +16,7 @@ class Category(models.Model):
     @property
     def number_auctions(self):
         auctions = self.auctions.all()
-        return len(auction)
+        return len(auctions)
 
 
 class Auction(models.Model):
@@ -40,6 +40,10 @@ class Auction(models.Model):
             return max(bid_values)
         else:
             return 0
+        
+    @property
+    def min_next_bid(self):
+        return max(self.current_bid, self.minimum_bid) + .01
 
 
 class Comment(models.Model):
@@ -71,3 +75,4 @@ class Bid(models.Model):
             raise ValidationError("Bid value must be bigger than 0.")
         elif self.value < self.auction.minimum_bid:
             raise ValidationError(f"Bid value must be bigger than {self.auction} action minimum bid ({self.auction.minimum_bid:.2f}).")
+        

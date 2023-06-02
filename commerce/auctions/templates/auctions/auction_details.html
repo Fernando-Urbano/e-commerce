@@ -10,26 +10,48 @@
     {% endif %}
     <div>
         {% if highest_bid_user %}
-            Current bid by {{ highest_bid_user }}: US$ {{ highest_bid_value }}. Initial Bid: US$ {{ auction.minimum_bid }}.
+            Current bid by {{ highest_bid_user }}: US$ {{ highest_bid_value|floatformat:2 }}. Initial Bid: US$ {{ auction.minimum_bid|floatformat:2 }}.
         {% else %}
-            No bids yet placed. Initial Bid: US$ {{ auction.minimum_bid }}.
+            No bids yet placed. Initial Bid: US$ {{ auction.minimum_bid|floatformat:2 }}.
         {% endif %}
-        {% if is_authenticated %}
-            {% if auction_closed %}
-                <h6>Auction closed.</h6>
-            {% else %}
-                {% if auction_owner %}
-                    {% if bids %}
-                        <h6>Accept current offer {{ highest_bid_value }}</h6>
-                    {% endif %}
-                    <h6>Withdraw auction</h6>
+        <div>
+            {% if is_authenticated %}
+                {% if auction_closed %}
+                    <h6>Auction closed.</h6>
                 {% else %}
-                    <h6>Place a bid!</h6>
+                <div>
+                    {% if auction_owner %}
+                        {% if bids %}
+                            <h6>Accept current offer {{ highest_bid_value|floatformat:2 }}</h6>
+                        {% endif %}
+                        <h6>Withdraw auction</h6>
+                    {% else %}
+                        <form method="post" action="{% url 'change_watchlist' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <input type="text" name="bid_value" placeholder="At least US$ {{ auction.min_next_bid }}">
+                            <button type="submit">Place bid!</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div>
+                    <form method="post" action="{% url 'change_watchlist' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        {% if auction in user_watchlist %}
+                            <button type="submit">Remove from Watchlist</button>
+                        {% else %}
+                            <button type="submit">Add to Watchlist</button>
+                        {% endif %}
+                    </form>
+                </div>
                 {% endif %}
+            {% else %}
+                <h6>Login to interact with Auction!</h6>
             {% endif %}
-        {% else %}
-            <h6>Login to interact with Auction!</h6>
-        {% endif %}
+        </div>
     </div>
 
     {% if auction.image_url %}
@@ -45,7 +67,7 @@
             <table class="details-table">
                 <thead>
                     <tr>
-                        <th>Date Created</th>
+                        <th>Time</th>
                         <th>User</th>
                         <th>Value</th>
                     </tr>
@@ -53,9 +75,9 @@
                 <tbody>
                     {% for bid in bids %}
                     <tr>
-                        <td>{{ bid.date_created }}</td>
+                        <td>{{ bid.date_created|date:"H:i:s d/m/Y" }}</td>
                         <td>{{ bid.user }}</td>
-                        <td>US$ {{ bid.value }}</td>
+                        <td>US$ {{ bid.value|floatformat:2 }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -69,7 +91,7 @@
         {% if comments %}
             {% for comment in comments %}
                 <div>
-                    <h6>{{ comment.user }} ({{ comment.date_created }})</h6>
+                    <h6>{{ comment.user }} ({{ comment.date_created|date:"H:i:s d/m/Y" }})</h6>
                     <div>{{ comment.text }}</div>
                 </div>
             {% endfor %}

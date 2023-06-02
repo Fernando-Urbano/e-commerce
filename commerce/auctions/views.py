@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -24,8 +24,10 @@ def categories(request):
 
 def category_auctions(request, category_id):
     category = Category.objects.get(pk=int(category_id))
+    auctions = category.auctions.filter(closed=False)
     return render(request, "auctions/category_auctions.html", {
-        'category': category
+        'category': category,
+        'auctions': auctions
     })
 
 
@@ -45,6 +47,19 @@ def login_view(request):
             })
     else:
         return render(request, "auctions/login.html")
+    
+
+def change_watchlist(request):
+    auction_id = request.POST["auction_id"]
+    user_id = request.POST["user_id"]
+    user = User.objects.get(pk=user_id)
+    auction = Auction.objects.get(pk=auction_id)
+    if user.watchlist.filter(pk=auction_id).exists():
+        user.watchlist.remove(auction)
+    else:
+        user.watchlist.add(auction)
+    user.save()
+    return redirect('auction_details', auction_id=auction_id)
 
 
 def logout_view(request):
@@ -66,6 +81,8 @@ def auction_details(request, auction_id):
         is_authenticated = False
         auction_owner = False
     return render(request, 'auctions/auction_details.html', {
+        'user': request.user,
+        'user_watchlist': request.user.watchlist.all(),
         'auction': auction,
         'highest_bid_value': highest_bid_value,
         'highest_bid_user': highest_bid_user,
