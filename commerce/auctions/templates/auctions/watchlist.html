@@ -4,9 +4,10 @@
 
     <h1>Watchlist</h1>
 
-    {% if watchlist %}
+    <h3>Watchlist Active Auctions</h3>
+    {% if watchlist_active_auctions %}
         <ul>
-            {% for auction in watchlist %}
+            {% for auction in watchlist_active_auctions %}
                 <li>
                     <a href="{% url 'auction_details' auction_id=auction.id %}">
                         {{ auction.name }} - Current bid: {{ auction.current_bid }}
@@ -16,6 +17,36 @@
         </ul>
     {% else %}
         <h6>You are not watching any auction.</h6>
+    {% endif %}
+    <hr>
+    <h3>Winning Auctions</h3>
+    {% if watchlist_winning_auctions %}
+        <ul>
+            {% for auction in watchlist_winning_auctions %}
+                <li>
+                    <a href="{% url 'auction_details' auction_id=auction.id %}">
+                        {{ auction.name }} - Current bid: {{ auction.current_bid }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h6>You are not winning any auctions.</h6>
+    {% endif %}
+    <hr>
+    <h3>Auctions Won</h3>
+    {% if watchlist_winner_auctions %}
+        <ul>
+            {% for auction in watchlist_winner_auctions %}
+                <li>
+                    <a href="{% url 'auction_details' auction_id=auction.id %}">
+                        {{ auction.name }} - Current bid: {{ auction.current_bid }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h6>You have not won any auctions.</h6>
     {% endif %}
 
 {% endblock %}

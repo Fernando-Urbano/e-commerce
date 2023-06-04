@@ -18,15 +18,33 @@
             {% if is_authenticated %}
                 {% if auction_closed %}
                     <h6>Auction closed.</h6>
+                    {% if auction.winner.id == user.id %}
+                        <h4>Congratulations! You won this auction!</h4>
+                    {% endif %}
                 {% else %}
                 <div>
                     {% if auction_owner %}
                         {% if bids %}
-                            <h6>Accept current offer {{ highest_bid_value|floatformat:2 }}</h6>
+                        <div>
+                            <form method="post" action="{% url 'accept_current_offer' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                                <input type="submit" value="Accept current offer at US$ {{ highest_bid_value|floatformat:2 }}">
+                            </form>
+                        </div>
                         {% endif %}
-                        <h6>Withdraw auction</h6>
+                        <div>
+                            <form method="post" action="{% url 'withdraw_auction' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                                <input type="submit" value="Withdraw auction">
+                            </form>
+                        </div>
                     {% else %}
-                        <form method="post" action="{% url 'change_watchlist' %}">
+                        {% if add_bid_message %}
+                            <h6>{{ add_bid_message }}</h6>
+                        {% endif %}
+                        <form method="post" action="{% url 'place_bid' %}">
                             {% csrf_token %}
                             <input type="hidden" name="auction_id" value="{{ auction.id }}">
                             <input type="hidden" name="user_id" value="{{ user.id }}">
@@ -91,8 +109,19 @@
         {% if comments %}
             {% for comment in comments %}
                 <div>
-                    <h6>{{ comment.user }} ({{ comment.date_created|date:"H:i:s d/m/Y" }})</h6>
-                    <div>{{ comment.text }}</div>
+                    {% if comment.user.id == user.id %}
+                        <form method="post" action="{% url 'remove_comment' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                            <h6>{{ comment.user }} ({{ comment.time_since_creation }})
+                                <input type="submit"  class="remove-comment-button" value="Remove Comment">
+                            </h6>
+                        </form>
+                    {% else %}
+                        <h6>{{ comment.user }} ({{ comment.time_since_creation }})</h6>
+                    {% endif %}
+                    {{ comment.text }}
                 </div>
             {% endfor %}
         {% else %}
@@ -100,9 +129,15 @@
         {% endif %}
     </div>
 
+    {% if add_comment_message %}
+        <h6>{{ add_comment_message }}</h6>
+    {% endif %}
     <div>
-        <form action="post">
-            <textarea name="new_comment" id="new_comment" cols="100" rows="2" placeholder="Write your comment here"></textarea>
+        <form method="post" action="{% url 'add_comment' %}">
+            {% csrf_token %}
+            <input type="hidden" name="auction_id" value="{{ auction.id }}">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <textarea name="comment_text" cols="100" rows="2" placeholder="Write your comment here"></textarea>
             <div>
                 <input type="submit" value="Add comment">
             </div>
