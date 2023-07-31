@@ -1,6 +1,9 @@
 # E-Commerce
 This is project number 2 of the CS50 Web Development course with Django and JavaScript lectured by Harvard CS department.
 
+## Screencast of project
+[https://www.youtube.com/watch?v=wkML34wZBQU](https://www.youtube.com/watch?v=FqzSTWCXzH0&feature=youtu.be)
+
 ## Create Listing
 Users can visit a page to create a new listing. They should specify a title for the listing, a text-based description, and what the starting bid should be. Users can also provide a URL for an image for the listing and/or a category (e.g. Fashion, Toys, Electronics, Home, etc.).
 
