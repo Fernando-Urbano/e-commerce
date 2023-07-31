@@ -28,9 +28,14 @@ Clicking on a listing takes the users to a page specific to that listing. On tha
 ## Watchlist
 Users who are signed in can visit a Watchlist page, which displays all of the listings that a user has added to their watchlist. Clicking on any of those listings takes the user to that listing’s page.
 
+<img width="957" alt="image" src="https://github.com/Fernando-Urbano/cs50w-p2-commerce/assets/99626376/5125a9ec-ddce-496c-856f-b5ea59faaeb9">
+
 ## Categories
 Users can visit a page that displays a list of all listing categories. Clicking on the name of any category takes the user to a page that displays all of the active listings in that category.
+
+<img width="785" alt="image" src="https://github.com/Fernando-Urbano/cs50w-p2-commerce/assets/99626376/7d70c24e-5dc0-47d1-97b2-4bd32346666e">
 
 ## Django Admin Interface
 Via the Django admin interface, a site administrator can view, add, edit, and delete any listings, comments, and bids made on the site.
 
+<img width="436" alt="image" src="https://github.com/Fernando-Urbano/cs50w-p2-commerce/assets/99626376/f09f6183-294f-4ab7-b4ae-7834461b1886">
