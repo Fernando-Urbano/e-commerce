@@ -2,7 +2,7 @@
 This is project number 2 of the CS50 Web Development course with Django and JavaScript lectured by Harvard CS department.
 
 ## Screencast of project
-Click on the image to be redirected to a video of the program working on youtube.
+Click on the image to be redirected to a video of the project working on youtube.
 
 [![image](https://github.com/Fernando-Urbano/e-commerce/assets/99626376/1d3d51fc-6892-4a4d-9d28-719e756aa3d3)](https://www.youtube.com/watch?v=FqzSTWCXzH0&feature=youtu.be)
 
